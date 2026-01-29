@@ -53,7 +53,13 @@ def predict_news(news_text):
     fake_prob = float(proba[0])
     real_prob = float(proba[1])
 
-    label = "REAL ✅" if real_prob > fake_prob else "FAKE ❌"
+    if fake_prob >= 0.70:
+        label = "FAKE"
+    elif real_prob >= 0.70:
+        label = "REAL"
+    else:
+        label = "UNCERTAIN"
+
     confidence = max(fake_prob, real_prob)
 
     return label, confidence, fake_prob, real_prob
@@ -68,7 +74,7 @@ st.write("Paste a news article or headline below and click **Predict**.")
 news_input = st.text_area("Enter news text:", height=200)
 
 if st.button("Predict"):
-    if len(news_input.split()) < 30:
+    if len(news_input.split()) < 80:
         st.warning("⚠️ Please enter at least 30 words for better prediction.")
         st.stop()
 
